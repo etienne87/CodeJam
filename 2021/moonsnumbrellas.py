@@ -20,22 +20,17 @@ def get_min_cost(seq, cj, jc):
             return 0 
 
         c = seq[i]
-        lc = last + c
-        res = xy[lc] 
-
         k = (i,last)
         if k in memory:
             return memory[k]
 
         if c == '?':
-            ra = xy[last+'J']
-            rb = xy[last+'C']
-            a = helper(i+1, 'J') + ra
-            b = helper(i+1, 'C') + rb
+            a = helper(i+1, 'J') + xy[last+'J'] 
+            b = helper(i+1, 'C') + xy[last+'C']
             cost = min(a,b)
             #w = w + 'J' if a > b else w + 'C'
         else:
-            cost = helper(i+1, c) + res
+            cost = helper(i+1, c) + xy[last+c] 
             
         
         memory[k] = cost 
@@ -44,10 +39,6 @@ def get_min_cost(seq, cj, jc):
     
     return helper(0) 
 
-
-#def get_min_cost(seq, cj, jc):
-    
-    
 
 
 def read_file(f):
