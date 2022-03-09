@@ -9,13 +9,11 @@ def get_min_cost(seq, cj, jc):
     xy = defaultdict(int)
     xy['JC'] = jc
     xy['CJ'] = cj
-    def helper(i, last=""): #, result=""):
+    def helper(i, last=""): 
         nonlocal memory
         nonlocal seq 
         nonlocal xy
 
-        #w = result + last 
-        
         if i == len(seq):
             return 0 
 
@@ -28,7 +26,6 @@ def get_min_cost(seq, cj, jc):
             a = helper(i+1, 'J') + xy[last+'J'] 
             b = helper(i+1, 'C') + xy[last+'C']
             cost = min(a,b)
-            #w = w + 'J' if a > b else w + 'C'
         else:
             cost = helper(i+1, c) + xy[last+c] 
             
