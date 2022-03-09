@@ -2,34 +2,45 @@ from collections import defaultdict
 
 
 def get_min_cost(seq, cj, jc):
-    mem_c = dict() 
-    mem_j = dict() 
-    def helper(i, curr_cost=0, last=None):
-        nonlocal mem_c
-        nonlocal mem_j
+    memory = dict() 
+    def helper(i, last="", result=[]):
+        nonlocal memory
         nonlocal seq 
         nonlocal cj
         nonlocal jc
 
+        w = list(result) + [last] 
+        
+
         if i == len(seq):
-            return curr_cost
+            return 0 
 
         c = seq[i]
-        total = curr_cost
+        def res_fun(l,c):
+            lc = l+c
+            if lc == 'CJ':
+                return cj
+            elif lc == 'JC':
+                return jc
+            else:
+                return 0
+
+        res = res_fun(last, c) 
+
+        total = 0
         if c == 'C': 
-            res = jc if last == 'J' else 0
-            total = helper(i+1, curr_cost + res, 'C')
+            total = helper(i+1, 'C', w) + res
         elif c == 'J':
-            res = cj if last == 'C' else 0
-            total = helper(i+1, curr_cost + res, 'J')
+            total = helper(i+1, 'J', w) + res
         elif c == '?':
-            if i not in mem_j:
-                res = cj if last == 'C' else 0
-                mem_j[i] = helper(i+1, curr_cost + res, 'J')
-            if i not in mem_c:
-                res = jc if last == 'J' else 0
-                mem_c[i] = helper(i+1, curr_cost + res, 'C')
-            total = min(mem_c[i], mem_j[i])
+            ra = res_fun(last, 'J') 
+            rb = res_fun(last, 'C') 
+            a = helper(i+1, 'J', w) + ra
+            b = helper(i+1, 'C', w) + rb
+            total = min(a,b)
+            
+
+        memory[i] = total 
 
         return total 
     
@@ -43,19 +54,31 @@ def read_file(f):
         for case_num in range(1, num_cases+1):
             s = f.readline().strip('\n')
             cj, jc = list(map(int, s[:4].split()))
-            seq = s[4:] 
+            seq = s[5:] 
             cases += [(cj,jc,seq)]
         return cases
             
 
 
 
-def main(f):
-    cases = read_file('moonsumbrellas_file.txt')
+def main_file(f):
+    cases = read_file(f)
     for case_num, case in enumerate(cases):
         cj, jc, seq = case
         cost = get_min_cost(seq, cj, jc)
         print(f"Case #{case_num} {case}: {cost}")
 
+def main_input():
+    num_cases = int(input())
+    for case_num in range(1, num_cases+1):
+        s = input()
+        cj, jc = list(map(int, s[:5].split()))
+        seq = s[5:] 
+        print('seq: ', seq)
+        cost = get_min_cost(seq, cj, jc)
+        print(f"Case #{case_num}: {cost}")
+    
+
+
 if __name__ == '__main__':
-    import fire;fire.Fire(main)
+    import fire;fire.Fire()
