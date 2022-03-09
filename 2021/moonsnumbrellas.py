@@ -1,30 +1,27 @@
+import sys  
+sys.setrecursionlimit(10000)
 from collections import defaultdict
 
 
 def get_min_cost(seq, cj, jc):
     memory = dict() 
+
+    xy = defaultdict(int)
+    xy['JC'] = jc
+    xy['CJ'] = cj
     def helper(i, last="", result=""):
         nonlocal memory
         nonlocal seq 
-        nonlocal cj
-        nonlocal jc
+        nonlocal xy
 
         w = result + last 
         
         if i == len(seq):
             return 0 
 
-        def res_fun(l,c):
-            lc = l+c
-            if lc == 'CJ':
-                return cj
-            elif lc == 'JC':
-                return jc
-            else:
-                return 0
-
         c = seq[i]
-        res = res_fun(last, c) 
+        lc = last + c
+        res = xy[lc] 
 
         k = (i,last)
         if k in memory:
@@ -36,8 +33,8 @@ def get_min_cost(seq, cj, jc):
         elif c == 'J':
             cost = helper(i+1, 'J', w) + res
         elif c == '?':
-            ra = res_fun(last, 'J') 
-            rb = res_fun(last, 'C') 
+            ra = xy[last+'J']
+            rb = xy[last+'C']
             a = helper(i+1, 'J', w) + ra
             b = helper(i+1, 'C', w) + rb
             cost = min(a,b)
