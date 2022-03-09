@@ -9,12 +9,12 @@ def get_min_cost(seq, cj, jc):
     xy = defaultdict(int)
     xy['JC'] = jc
     xy['CJ'] = cj
-    def helper(i, last="", result=""):
+    def helper(i, last=""): #, result=""):
         nonlocal memory
         nonlocal seq 
         nonlocal xy
 
-        w = result + last 
+        #w = result + last 
         
         if i == len(seq):
             return 0 
@@ -29,16 +29,16 @@ def get_min_cost(seq, cj, jc):
 
         cost = 0
         if c == 'C': 
-            cost = helper(i+1, 'C', w) + res
+            cost = helper(i+1, 'C') + res
         elif c == 'J':
-            cost = helper(i+1, 'J', w) + res
+            cost = helper(i+1, 'J') + res
         elif c == '?':
             ra = xy[last+'J']
             rb = xy[last+'C']
-            a = helper(i+1, 'J', w) + ra
-            b = helper(i+1, 'C', w) + rb
+            a = helper(i+1, 'J') + ra
+            b = helper(i+1, 'C') + rb
             cost = min(a,b)
-            w = w + 'J' if a > b else w + 'C'
+            #w = w + 'J' if a > b else w + 'C'
         
         memory[k] = cost 
 
@@ -65,7 +65,7 @@ def main_file(f):
     for case_num, case in enumerate(cases):
         cj, jc, seq = case
         cost = get_min_cost(seq, cj, jc)
-        print(f"Case #{case_num} {case}: {cost}")
+        print(f"Case #{case_num}: {cost}")
 
 def main_input():
     num_cases = int(input())
