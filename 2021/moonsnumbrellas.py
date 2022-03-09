@@ -28,6 +28,9 @@ def get_min_cost(seq, cj, jc):
         res = res_fun(last, c) 
 
         total = 0
+        if i in memory:
+            return memory[i]
+
         if c == 'C': 
             total = helper(i+1, 'C', w) + res
         elif c == 'J':
@@ -38,7 +41,6 @@ def get_min_cost(seq, cj, jc):
             a = helper(i+1, 'J', w) + ra
             b = helper(i+1, 'C', w) + rb
             total = min(a,b)
-            
 
         memory[i] = total 
 
