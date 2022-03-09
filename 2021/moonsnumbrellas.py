@@ -50,6 +50,7 @@ def get_min_cost(seq, cj, jc):
     return helper(0) 
     
 
+
 def read_file(f):
     cases = []
     with open(f, 'r') as f:
@@ -61,9 +62,6 @@ def read_file(f):
             seq = s[2] 
             cases += [(cj,jc,seq)]
         return cases
-            
-
-
 
 def main_file(f):
     cases = read_file(f)
@@ -75,10 +73,10 @@ def main_file(f):
 def main_input():
     num_cases = int(input())
     for case_num in range(1, num_cases+1):
-        s = input()
-        cj, jc = list(map(int, s[:5].split()))
-        seq = s[5:] 
-        print('seq: ', seq)
+        s = input().split()
+        cj = int(s[0])
+        jc = int(s[1])
+        seq = s[2] 
         cost = get_min_cost(seq, cj, jc)
         print(f"Case #{case_num}: {cost}")
     
