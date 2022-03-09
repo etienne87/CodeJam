@@ -3,19 +3,17 @@ from collections import defaultdict
 
 def get_min_cost(seq, cj, jc):
     memory = dict() 
-    def helper(i, last="", result=[]):
+    def helper(i, last="", result=""):
         nonlocal memory
         nonlocal seq 
         nonlocal cj
         nonlocal jc
 
-        w = list(result) + [last] 
+        w = result + last 
         
-
         if i == len(seq):
             return 0 
 
-        c = seq[i]
         def res_fun(l,c):
             lc = l+c
             if lc == 'CJ':
@@ -25,26 +23,29 @@ def get_min_cost(seq, cj, jc):
             else:
                 return 0
 
+        c = seq[i]
         res = res_fun(last, c) 
 
-        total = 0
-        if i in memory:
-            return memory[i]
+        k = (i,last)
+        if k in memory:
+            return memory[k]
 
+        cost = 0
         if c == 'C': 
-            total = helper(i+1, 'C', w) + res
+            cost = helper(i+1, 'C', w) + res
         elif c == 'J':
-            total = helper(i+1, 'J', w) + res
+            cost = helper(i+1, 'J', w) + res
         elif c == '?':
             ra = res_fun(last, 'J') 
             rb = res_fun(last, 'C') 
             a = helper(i+1, 'J', w) + ra
             b = helper(i+1, 'C', w) + rb
-            total = min(a,b)
+            cost = min(a,b)
+            w = w + 'J' if a > b else w + 'C'
+        
+        memory[k] = cost 
 
-        memory[i] = total 
-
-        return total 
+        return memory[k] 
     
     return helper(0) 
     
@@ -54,9 +55,10 @@ def read_file(f):
     with open(f, 'r') as f:
         num_cases = int(f.readline())
         for case_num in range(1, num_cases+1):
-            s = f.readline().strip('\n')
-            cj, jc = list(map(int, s[:4].split()))
-            seq = s[5:] 
+            s = f.readline().strip('\n').split()
+            cj = int(s[0])
+            jc = int(s[1])
+            seq = s[2] 
             cases += [(cj,jc,seq)]
         return cases
             
