@@ -27,24 +27,26 @@ def get_min_cost(seq, cj, jc):
         if k in memory:
             return memory[k]
 
-        cost = 0
-        if c == 'C': 
-            cost = helper(i+1, 'C') + res
-        elif c == 'J':
-            cost = helper(i+1, 'J') + res
-        elif c == '?':
+        if c == '?':
             ra = xy[last+'J']
             rb = xy[last+'C']
             a = helper(i+1, 'J') + ra
             b = helper(i+1, 'C') + rb
             cost = min(a,b)
             #w = w + 'J' if a > b else w + 'C'
+        else:
+            cost = helper(i+1, c) + res
+            
         
         memory[k] = cost 
 
         return memory[k] 
     
     return helper(0) 
+
+
+#def get_min_cost(seq, cj, jc):
+    
     
 
 
